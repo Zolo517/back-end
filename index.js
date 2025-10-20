@@ -19,22 +19,16 @@ const app = express();
 app.use(bodyParser.json());
 
 const students = [];
+const users = [];
 
 app.get("/", async (request, response) => {
   const res = await axios.get("https://gogo.mn/cache/news-shinemedee?size=15");
 
   response.send(res.data);
 
-  //   const prevStudents = students.filter((student) => {
-  //     student.phoneNumber === request.body.phoneNumber;
-  //   });
-  //   if (prevStudents.length === 0) {
-  //     students.push(request.body);
-  //     return response.status(200).send(students).end();
-  //   } else {
-  //     return response.status(409).send({ message: "student is duplicated" });
-  //   }
 });
+
+app.post("/")
 
 app.post("/students", async (request, response) => {
   const prevStudents = students.filter((student) => {
@@ -52,6 +46,21 @@ app.get("/students", async (request, response) => {
   return response.status(200).send(students).end();
 });
 
+app.post("/login", async (request, response) => {
+  const prevStudents = users.filter(
+    (user) => user.userName === request.body.userName
+  );
+  if (prevStudents.length === 0) {
+    users.push(request.body);
+    return response.status(200).send(users).end();
+  } else {
+    return response.status(409).send({ messages: "username is already taken" });
+  }
+});
+
+app.get("/login", async (request, response) => {
+  return response.status(200).send(users).end();
+});
 // app.get("/students?gender=female", async (request, response) => {
 //   const gender = students.filter((student) => student.gender === "female");
 //   response.send(gender);
@@ -64,6 +73,9 @@ app.listen(3000, () => {
       "server is running on http://localhost:3000/students"
     )
   );
+  log(
+    chalk.italic.cyanBright("server is running on http://localhost:3000/login")
+  );
 });
 
 // app.get("/student-detail", async (request, response) => {
@@ -73,15 +85,15 @@ app.listen(3000, () => {
 // });
 
 // log(chalk.blue("red") + chalk.red("blue") + chalk.magenta("hihi"));
-// log(
-//   await figlet.text("Boo!", {
-//     font: "Ghost",
-//     horizontalLayout: "default",
-//     verticalLayout: "default",
-//     width: 80,
-//     whitespaceBreak: true,
-//   })
-// );
+log(
+  await figlet.text("Boo!", {
+    font: "Ghost",
+    horizontalLayout: "default",
+    verticalLayout: "default",
+    width: 80,
+    whitespaceBreak: true,
+  })
+);
 // log(chalk.italic.blue("working"));
 
 // const students3B = {
