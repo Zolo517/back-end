@@ -25,10 +25,9 @@ app.get("/", async (request, response) => {
   const res = await axios.get("https://gogo.mn/cache/news-shinemedee?size=15");
 
   response.send(res.data);
-
 });
 
-app.post("/")
+// app.post("/")
 
 app.post("/students", async (request, response) => {
   const prevStudents = students.filter((student) => {
