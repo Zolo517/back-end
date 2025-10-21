@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 
 let students = [];
 const users = [];
-
+// datag ni huuleh shaardlagatai uchraas async await hiij baigaa
 app.get("/", async (request, response) => {
   const res = await axios.get("https://gogo.mn/cache/news-shinemedee?size=15");
 
@@ -36,10 +36,13 @@ app.get("/", async (request, response) => {
 });
 //Post
 app.post("/students", (request, response) => {
+  const { id, phoneNumber } = request.body;
   const prevStudents = students.filter((student) => {
-    student.phoneNumber === request.body.phoneNumber;
+    if (student.id === id || student.phoneNumber === phoneNumber) {
+      return true;
+    }
   });
-  console.log(prevStudents);
+  console.log(prevStudents, "prev");
   if (prevStudents.length === 0) {
     students.push(request.body);
     return response.status(200).send(students).end();
@@ -49,22 +52,40 @@ app.post("/students", (request, response) => {
 });
 // Get
 app.get("/students", (request, response) => {
-  const { gender, age } = request.query;
+  const { gender, age, phoneNumber } = request.query;
   if (gender) {
-    const filteredStudents = students.filter((student) => {
-      if (student.gender === gender && student.age < age) {
+    const filteredStudentsByGender = students.filter((student) => {
+      if (student.gender === gender) {
         return true;
       }
     });
-    return response.status(200).send(filteredStudents).end();
+    return response.status(200).send(filteredStudentsByGender).end();
+  }
+  if (age) {
+    const filteredStudentsByAge = students.filter((student) => {
+      if (student.age > age) {
+        return true;
+      }
+    });
+    return response.status(200).send(filteredStudentsByAge).end();
+  }
+  if (phoneNumber) {
+    const filteredStudentsByPhoneNumber = students.filter((student) => {
+      if (student.phoneNumber === phoneNumber) {
+        return true;
+      }
+    });
+    return response.status(200).send(filteredStudentsByPhoneNumber).end();
   }
   return response.status(200).send(students).end();
 });
+
+app.get("/students/:id", (req, res) => {});
 // Put
 app.put("/students", (request, response) => {
   const updatedStudents = students.map((student) => {
     if (student.id === request.body.id) {
-      student.phoneNumber = request.body.phoneNumber;
+      student.username = request.body.username;
     }
     return student;
   });
@@ -86,15 +107,11 @@ app.patch("/students", (request, response) => {
 });
 // Delete
 app.delete("/students/:id", (request, response) => {
-  const updatedStudents = students.map((student) => {
-    if (student.id === request.body.id) {
-      student.phoneNumber === request.body.phoneNumber;
-    }
-    return student;
+  const { id } = request.params;
+  students = students.filter((student) => {
+    return student.id != id;
   });
-  students = updatedStudents;
-
-  return response.send(updatedStudents).end();
+  return response.send(students).end();
 });
 
 app.post("/login", (request, response) => {
@@ -127,7 +144,12 @@ app.listen(port, () => {
   );
   log(
     chalk.italic.cyanBright(
-      `Server is running on http://localhost:${port}/students?gender=female&age=12`
+      `Server is running on http://localhost:${port}/students?gender=female&age=12&phoneNumber=91223073`
+    )
+  );
+  log(
+    chalk.italic.cyanBright(
+      `Server is running on http://localhost:${port}/students?gender=male&age=12&phoneNumber=91223073`
     )
   );
 });
