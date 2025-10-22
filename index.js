@@ -6,7 +6,14 @@ import express from "express";
 import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
 import { connectDB } from "./db.js";
-import { createUser, deleteUSer, getUserById, getUsers, updateUser, updateUserInfo } from "./src/controllers/user.js";
+import {
+  createUser,
+  deleteUser,
+  getUserById,
+  getUsers,
+  updateUser,
+  updateUserInfo,
+} from "./src/controllers/user.js";
 //nodemon backend live server
 // CRUD
 // create ——> POST
@@ -29,13 +36,49 @@ const app = express();
 app.use(bodyParser.json());
 
 app.post("/students", createUser);
-app.get("/students/:id", getUserById);
-app.put("/students", updateUser);
-app.patch("/students/:id", updateUserInfo);
-app.delete("/students/:id", deleteUSer);
+app.get("/students", getUsers);
 
+// app.get("/students/:id", getUserById);
+// app.put("/students/:id", updateUser);
+// app.patch("/students/:id", updateUserInfo);
+// app.delete("/students/:id", deleteUser);
 
 // app.get("/students", getUsers);
+
+app.listen(port, () => {
+  connectDB();
+  log(chalk.italic.cyanBright(`Server is running on http://localhost:${port}`));
+  log(
+    chalk.italic.cyanBright(
+      `Server is running on http://localhost:${port}/students`
+    )
+  );
+  log(
+    chalk.italic.cyanBright(
+      `Server is running on http://localhost:${port}/login`
+    )
+  );
+  log(
+    chalk.italic.cyanBright(
+      `Server is running on http://localhost:${port}/students?gender=female&age=12&phoneNumber=91223073`
+    )
+  );
+  log(
+    chalk.italic.cyanBright(
+      `Server is running on http://localhost:${port}/students?gender=male&age=12&phoneNumber=91223073`
+    )
+  );
+});
+
+log(
+  await figlet.text("Boo!", {
+    font: "Ghost",
+    horizontalLayout: "default",
+    verticalLayout: "default",
+    width: 80,
+    whitespaceBreak: true,
+  })
+);
 
 // let students = [];
 // const users = [];
@@ -152,38 +195,3 @@ app.delete("/students/:id", deleteUSer);
 // app.get("/login", (request, response) => {
 //   return response.status(200).send(users).end();
 // });
-
-app.listen(port, () => {
-  connectDB();
-  log(chalk.italic.cyanBright(`Server is running on http://localhost:${port}`));
-  log(
-    chalk.italic.cyanBright(
-      `Server is running on http://localhost:${port}/students`
-    )
-  );
-  log(
-    chalk.italic.cyanBright(
-      `Server is running on http://localhost:${port}/login`
-    )
-  );
-  log(
-    chalk.italic.cyanBright(
-      `Server is running on http://localhost:${port}/students?gender=female&age=12&phoneNumber=91223073`
-    )
-  );
-  log(
-    chalk.italic.cyanBright(
-      `Server is running on http://localhost:${port}/students?gender=male&age=12&phoneNumber=91223073`
-    )
-  );
-});
-
-log(
-  await figlet.text("Boo!", {
-    font: "Ghost",
-    horizontalLayout: "default",
-    verticalLayout: "default",
-    width: 80,
-    whitespaceBreak: true,
-  })
-);

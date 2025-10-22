@@ -39,15 +39,32 @@ export const getUserById = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {};
-
-export const updateUserInfo = async (req, res) => {};
-
-export const deleteUSer = async (req, res) => {
+export const updateUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const result= await User
+    const result = await User.findOneAndReplace(id);
+    res.send(result);
   } catch (error) {
-    console.log(error)
+    console.log(error);
+  }
+};
+
+export const updateUserInfo = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await User.findOneAndUpdate(id);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await User.findByIdAndDelete(id);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
   }
 };
