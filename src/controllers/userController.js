@@ -1,4 +1,4 @@
-import { User } from "../models/user.js";
+import { User } from "../models/userModel.js";
 
 export const createUser = async (req, res) => {
   try {
@@ -8,7 +8,7 @@ export const createUser = async (req, res) => {
       password: req.body.password,
     });
     console.log(result);
-    res.send(result);
+    res.send(result, "success");
   } catch (error) {
     console.error(error);
     res.send(error);
@@ -41,8 +41,10 @@ export const getUserById = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
+
   try {
-    const result = await User.findOneAndReplace(id);
+    const updatedInfo = req.body;
+    const result = await User.findByIdAndUpdate(id, updatedInfo);
     res.send(result);
   } catch (error) {
     console.log(error);
@@ -52,7 +54,9 @@ export const updateUser = async (req, res) => {
 export const updateUserInfo = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await User.findOneAndUpdate(id);
+    const updatedInfo = req.body;
+
+    const result = await User.findByIdAndUpdate(id, {});
     res.send(result);
   } catch (error) {
     console.log(error);
