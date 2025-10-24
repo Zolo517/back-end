@@ -26,7 +26,8 @@ const port = process.env.PORT;
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); //bodynoos irsen json meddeellig haruulj ugudg
+
 
 app.use("/user", UserRouter);
 app.use("/student", StudentsRouter);
